@@ -7,12 +7,17 @@ class PoetrySpider(CrawlSpider):
     name = "poemhunter"
     allowed_domains = ["poemhunter.com"]
     start_urls = [
-        "http://www.poemhunter.com/p/t/l.asp?p=1&l=Top500"
+        "http://www.poemhunter.com/classics/"
                 ]
     rules = (
         Rule(LinkExtractor(
+            allow="classics/(.*?)",
             # We never want any 'members' profiles
-            deny=["members"],
+            deny=["members", "poets"],
+            restrict_xpaths="//div[contains(@class, 'pagination')]/ul/li[contains(@class, 'next')]"),
+            follow=True),
+        Rule(LinkExtractor(            
+            deny=["members", "poets"],
             restrict_xpaths="//a[contains(@class, 'name')]"),
             follow=True),
         Rule(LinkExtractor(
@@ -23,8 +28,8 @@ class PoetrySpider(CrawlSpider):
             follow=True),
         Rule(LinkExtractor(
             allow="/poem/(.*?)",
-            deny=["members", "/(.*?)/poems"],
-            restrict_xpaths="//a"),
+            deny=["members", "/(.*?)/poems", "/(.*?)/comments"],
+            restrict_xpaths=["//a",]),
             callback='parse_item',
             follow=True),
     )
