@@ -15,7 +15,16 @@ NEWSPIDER_MODULE = 'poemcrawler.spiders'
 
 ITEM_PIPELINES = {
     'poemcrawler.pipelines.DuplicatesPipeline': 300,
-    'poemcrawler.pipelines.JsonWriterPipeline': 800,
+    'poemcrawler.pipelines.PoetryAndAlcoholPipeline': 800,
+}
+
+DATABASE = {
+    'drivername': 'postgres',
+    'host': 'localhost',
+    'port': '5432',
+    'username': 'postgres',
+    'password': 'popcorn1',
+    'database': 'poetryandalcohol'
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

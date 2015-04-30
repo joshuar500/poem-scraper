@@ -36,10 +36,10 @@ class PoetrySpider(CrawlSpider):
 
     # These are the exact XPath's to the required text.
     def parse_item(self, response):
-        for sel in response.xpath("//html"):
+        for sel in response.xpath("//body"):
             item = PoemItem()
-            item['author'] = sel.xpath("//body/div/div[contains(@id, 'content')]/h2/text()").extract()
-            item['title'] = sel.xpath("//body/div/div/div/div/div/div/div/div/a/span[contains(@itemprop, 'title')]/text()").extract()
-            item['poem'] = sel.xpath("//div[contains(@class, 'poem-detail')]/div/div[contains(@class, 'KonaBody')]/p/text()").extract()
-            item['url']  = response.request.url
+            item['author'] = sel.xpath("//div/div[contains(@id, 'content')]/h2/text()").extract()[0].strip()
+            item['title'] = sel.xpath("///div/div/div/div/div/div/div/div/a/span[contains(@itemprop, 'title')]/text()").extract()[0].strip()
+            item['poem'] = [x.strip() for x in sel.xpath("//div[contains(@class, 'poem-detail')]/div/div[contains(@class, 'KonaBody')]/p/text()").extract() if x.strip()]
+            item['url'] = response.request.url
             yield item

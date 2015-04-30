@@ -1,4 +1,6 @@
-import json
+# import json
+from sqlalchemy.orm import sessionmaker
+from models import Author, Poem, db_connect, create_poetry_table
 from scrapy.exceptions import DropItem
 
 
@@ -20,12 +22,46 @@ class DuplicatesPipeline(object):
             return item
 
 
-# Output in clean Json format
-class JsonWriterPipeline(object):
+class PoetryAndAlcoholPipeline(object):
+    """PoetryAndAlcohol pipeline for storing scraped items in the database"""
     def __init__(self):
-        self.file = open('items.jl', 'wb')
+        """
+        Initializes database connection and sessionmaker.
+        Creates poetryandalcohol table.
+        """
+        engine = db_connect()
+        create_poetry_table(engine)
+        self.Session = sessionmaker(bind=engine)
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item)) + "\n"
-        self.file.write(line)
+        """Save poems in the database.
+
+        This method is called for every item pipeline component.
+
+        """
+        session = self.Session()
+        # author = Author(item['author'])
+        poem = Poem(**item)
+
+        try:
+            # TODO: IF AUTHOR EXISTS, ADD ONLY POEM
+            # session.add(author)
+            session.add(poem)
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
         return item
+
+# # Output in clean Json format
+# class JsonWriterPipeline(object):
+#     def __init__(self):
+#         self.file = open('items.jl', 'wb')
+
+#     def process_item(self, item, spider):
+#         line = json.dumps(dict(item)) + "\n"
+#         self.file.write(line)
+#         return item
