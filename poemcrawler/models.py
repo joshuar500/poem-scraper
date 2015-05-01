@@ -28,3 +28,19 @@ class Poem(DeclarativeBase):
     poem = Column(Text(), nullable=False)
     author = Column(String(250), nullable=False)
     url = Column(String(350), nullable=False)
+
+
+# Some stuff for PostgreSQL
+
+# insert into Authors (author)
+# select distinct author
+# from Poems;
+
+# ALTER TABLE poem
+#    ADD COLUMN author_id integer,
+#    ADD FOREIGN KEY (author_id) REFERENCES author (id);
+
+# update poem
+#   set author_id = author.id
+# from author
+# where author.name = poem.author;

@@ -1,6 +1,6 @@
 # import json
 from sqlalchemy.orm import sessionmaker
-from models import Author, Poem, db_connect, create_poetry_table
+from models import Poem, db_connect, create_poetry_table
 from scrapy.exceptions import DropItem
 
 
